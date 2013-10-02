@@ -29,6 +29,13 @@ end
 
 service "ssh" do
   service_name node['openssh']['service_name']
+  provider value_for_platform(
+    "ubuntu" => {
+      "8.04" => Chef::Provider::Service::Init,
+      "default" => Chef::Provider::Service::Upstart
+    },
+    "default" => Chef::Provider::Service::Init
+  )
   supports value_for_platform(
     "debian" => { "default" => [ :restart, :reload, :status ] },
     "ubuntu" => {
